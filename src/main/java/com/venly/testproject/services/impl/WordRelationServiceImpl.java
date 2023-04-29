@@ -35,13 +35,16 @@ public class WordRelationServiceImpl implements WordRelationService {
 
     @Override
     public void createWordRelation(WordRelationInputDTO input) {
-        if (input == null) {
+        if (input == null || input.getRelationType() == null) {
             throw new BadRequestException(ErrorCode.ERROR_EMPTY_PARAMS);
         }
 
+        String mainWord = validateWord(input.getMainWord());
+        String relatedWord = validateWord(input.getRelatedWord());
+
         try {
-            Word word = new Word(input.getMainWord().trim().toLowerCase());
-            WordRelation wordRelation = new WordRelation(input.getRelationType(), input.getRelatedWord().trim().toLowerCase());
+            Word word = new Word(mainWord);
+            WordRelation wordRelation = new WordRelation(input.getRelationType(), relatedWord);
             wordRelationServiceTxn.createWordRelation(word, wordRelation);
         }
         catch (final Exception ex) {
@@ -61,5 +64,13 @@ public class WordRelationServiceImpl implements WordRelationService {
             return Collections.<WordDTO>emptyList();
         }
         return modelMapper.map(resultList, new TypeToken<List<WordDTO>>(){}.getType());
+    }
+
+    //TODO: move to util class
+    private static String validateWord(String word) {
+        if (StringUtils.isBlank(word)) {
+            throw new BadRequestException(ErrorCode.ERROR_EMPTY_PARAMS);
+        }
+        return word.trim().toLowerCase();
     }
 }
