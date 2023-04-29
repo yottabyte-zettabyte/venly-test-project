@@ -1,7 +1,9 @@
 package com.venly.testproject.controllers;
 
+import com.venly.testproject.dto.WordDTO;
 import com.venly.testproject.dto.input.WordRelationInputDTO;
 import com.venly.testproject.services.WordRelationService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,5 +22,10 @@ public class WordController {
     public ResponseEntity createWordRelation(@RequestBody WordRelationInputDTO requestBody) {
         wordRelationService.createWordRelation(requestBody);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/relations")
+    public ResponseEntity<List<WordDTO>> getWordRelations() {
+        return new ResponseEntity<>(wordRelationService.getAllWordsWithRelations(), HttpStatus.OK);
     }
 }
