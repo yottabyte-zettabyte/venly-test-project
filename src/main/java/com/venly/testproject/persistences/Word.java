@@ -5,9 +5,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,7 +26,9 @@ public class Word implements Serializable {
 
     @Id
     @EqualsAndHashCode.Include
-    private String id;
+    @SequenceGenerator(name = "words_id_seq", sequenceName = "words_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "words_id_seq")
+    private Integer id;
 
     @Column(name = "word", nullable = false)
     private String word;
@@ -31,4 +36,10 @@ public class Word implements Serializable {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "word_id", referencedColumnName = "id")
     private List<WordRelation> wordRelations;
+
+    public Word() {}
+
+    public Word(String word) {
+        this.word = word;
+    }
 }
