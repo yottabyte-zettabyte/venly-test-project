@@ -6,6 +6,7 @@ import com.venly.testproject.repositories.WordRelationRepository;
 import com.venly.testproject.repositories.WordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +15,7 @@ public class WordRelationServiceTxn {
     private final WordRepository wordRepository;
     private final WordRelationRepository wordRelationRepository;
 
+    @Transactional
     public void createWordRelation(Word word, WordRelation wordRelation) {
         wordRepository.save(word);
 
