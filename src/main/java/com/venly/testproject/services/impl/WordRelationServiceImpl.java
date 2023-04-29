@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Page;
@@ -39,8 +40,8 @@ public class WordRelationServiceImpl implements WordRelationService {
         }
 
         try {
-            Word word = new Word(input.getMainWord());
-            WordRelation wordRelation = new WordRelation(input.getRelationType(), input.getRelatedWord());
+            Word word = new Word(input.getMainWord().trim().toLowerCase());
+            WordRelation wordRelation = new WordRelation(input.getRelationType(), input.getRelatedWord().trim().toLowerCase());
             wordRelationServiceTxn.createWordRelation(word, wordRelation);
         }
         catch (final Exception ex) {
