@@ -2,6 +2,7 @@ package com.venly.testproject.services.impl;
 
 import com.venly.testproject.dto.WordDTO;
 import com.venly.testproject.dto.input.WordRelationInputDTO;
+import com.venly.testproject.enums.RelationType;
 import com.venly.testproject.exceptions.BadRequestException;
 import com.venly.testproject.exceptions.GenericException;
 import com.venly.testproject.exceptions.handler.ErrorCode;
@@ -16,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -46,11 +49,16 @@ public class WordRelationServiceImpl implements WordRelationService {
         }
     }
 
-    public List<WordDTO> getAllWordsWithRelations() {
-        List<Word> words = wordRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
-        if (CollectionUtils.isEmpty(words)) {
+    @Override
+    public List<WordDTO> getAllWordsWithRelations(RelationType type) {
+        //page and size can be configurable or be taken as optional inputs
+        PageRequest pageRequest = PageRequest.of(0, 50, Sort.by(Sort.Direction.ASC, "id"));
+        Page<Word> resultPage = wordRepository.findAll(pageRequest, type);
+        List<Word> resultList = resultPage.getContent();
+
+        if (CollectionUtils.isEmpty(resultList)) {
             return Collections.<WordDTO>emptyList();
         }
-        return modelMapper.map(words, new TypeToken<List<WordDTO>>(){}.getType());
+        return modelMapper.map(resultList, new TypeToken<List<WordDTO>>(){}.getType());
     }
 }

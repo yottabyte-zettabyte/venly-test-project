@@ -2,6 +2,7 @@ package com.venly.testproject.controllers;
 
 import com.venly.testproject.dto.WordDTO;
 import com.venly.testproject.dto.input.WordRelationInputDTO;
+import com.venly.testproject.enums.RelationType;
 import com.venly.testproject.services.WordRelationService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class WordController {
     }
 
     @GetMapping("/relations")
-    public ResponseEntity<List<WordDTO>> getWordRelations() {
-        return new ResponseEntity<>(wordRelationService.getAllWordsWithRelations(), HttpStatus.OK);
+    public ResponseEntity<List<WordDTO>> getWordRelations(@RequestParam(name = "type", required = false) RelationType type) {
+        return new ResponseEntity<>(wordRelationService.getAllWordsWithRelations(type), HttpStatus.OK);
     }
 }
